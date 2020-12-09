@@ -11,15 +11,16 @@ namespace DAL
 {
     public  class DalLists : IDal
     {
- 
+
+        private String myString = "kuku strike again";
         public string SayHello()
         {
-            return DataSource.Hello;
+            return myString;
         }
 
         public void SetHello(string message)
         {
-            DataSource.Hello = message;
+            myString = message;
         }
 
         public bool addBus(BusDAO bus)

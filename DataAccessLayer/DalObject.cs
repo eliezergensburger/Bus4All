@@ -9,6 +9,7 @@ namespace DAL
 {
     public sealed class DalObject : IDal
     {
+        // singleton implementaion
         private readonly static IDal mydal = new DalObject();
 
         private DalObject() { }
@@ -16,6 +17,7 @@ namespace DAL
 
         public static IDal Instance { get => mydal; }
 
+        // IDal implementation
         public string SayHello()
         {
             return DataSource.Hello;

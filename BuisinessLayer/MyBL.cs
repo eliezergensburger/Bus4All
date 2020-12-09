@@ -30,7 +30,9 @@ namespace BL
             {
                 License = Int32.Parse(bus.License),
                 StartOfWork = bus.StartOfWork,
-                TotalKms = bus.TotalKms
+                TotalKms = bus.TotalKms,
+                Fuel = 0,
+                Status = (bus.Status == true) ? Status.READY : Status.REFUELLING
             };
         }
 
@@ -40,7 +42,8 @@ namespace BL
             {
                 License = bus.License.ToString(),
                 StartOfWork = bus.StartOfWork,
-                TotalKms = bus.TotalKms
+                TotalKms = bus.TotalKms,
+                Status = bus.Status == Status.READY
             };
         }
 
@@ -87,6 +90,10 @@ namespace BL
         {
             List<BusDAO> buses = dal.getBusses();
             BusDAO busDAO = convertDAO(bus);
+            //********
+            //for debugging purpose
+            busDAO.Status = Status.READY;
+            //*******
             if (!buses.Any(item => item.License == busDAO.License))
             {
                 throw new ArgumentNullException("bus");
@@ -157,6 +164,7 @@ namespace BL
             //update progess in main thread how ?
 
             busDAO.Fuel = 1200;
+
             busDAO.Status = Status.READY;
             dal.update(busDAO);
         }

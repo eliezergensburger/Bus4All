@@ -15,7 +15,9 @@ namespace DO
             {
                 License = source.License,
                 StartOfWork = source.StartOfWork,
-                TotalKms = source.TotalKms
+                TotalKms = source.TotalKms,
+                Fuel = source.Fuel,
+                Status = source.Status
             };
         }
 
