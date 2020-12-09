@@ -21,10 +21,10 @@ namespace PresentationLayer
                 StartOfWork = DateTime.Today.AddYears(-2),
                 TotalKms = 5000,
             };
+
             bl.insertBus(bus);
+
             bl.refuel(bus);
-            printAllbusses();
-           Thread.Sleep(20000);
  
             bl.insertBus(new Bus
             {
@@ -47,6 +47,12 @@ namespace PresentationLayer
                 StartOfWork = DateTime.Today,
                 TotalKms = 100
             });
+
+            printAllbusses();
+
+            Console.WriteLine("Press any key to return.. (wait to backround thread).");
+            Console.ReadKey();
+
             printAllbusses();
             //Console.WriteLine(bl.TomarShalom());
 

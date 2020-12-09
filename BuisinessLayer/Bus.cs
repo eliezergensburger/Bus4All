@@ -14,7 +14,15 @@ namespace BO
         public bool Status { get; set; }
         public override string ToString()
         {
-            return $"License is: {License}, Start of Work: {StartOfWork.ToShortDateString()}, Total KM: {TotalKms} Ready to drive: {Status}";
+            return
+                $"License is: {License}, \n" +
+                $"Start of Work: {StartOfWork.ToShortDateString()}, \n" +
+                $"Total KM: {TotalKms}, \n" +
+                $"Ready to drive: {Status} \n";
         }
+        //public override string ToString()
+        //{
+        //    return this.ToStringProperty();
+        //}
     }
 }
