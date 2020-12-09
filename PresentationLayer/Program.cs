@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BL;
+using BO;
 
 namespace PresentationLayer
 {
     class Program
     {
-        static BL.IBL bl = FactoryBL.BlInstance;
+        static IBL bl = FactoryBL.BlInstance;
  
         static void Main(string[] args)
         {
@@ -20,7 +21,7 @@ namespace PresentationLayer
                 TotalKms = 5000
             };
             bl.insertBus(bus);
-
+            bl.refuel(bus);
             bl.insertBus(new Bus
             {
                 License = "33333",

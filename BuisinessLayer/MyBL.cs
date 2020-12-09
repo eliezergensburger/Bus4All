@@ -1,24 +1,29 @@
 ﻿using DALAPI;
 using DO;
+using BO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.ComponentModel;
 
 namespace BL
 {
-    internal sealed class MyBL : IBL,DummyBL
+    internal sealed class MyBL : IBL, DummyBL
     {
-       IDal dal = Factory.FactoryDal.getDal("simple");
+        IDal dal = FactoryDal.getDal("simple");
+        private BackgroundWorker metadlek;
 
         private static IBL instance = new MyBL();
         public static IBL getInstance()
         {
             return instance;
         }
-        static MyBL() {}
-        private MyBL() {}
+        static MyBL() { }
+        private MyBL() { }
+
         private BusDAO convertDAO(Bus bus)
         {
             return new BusDAO
@@ -39,6 +44,8 @@ namespace BL
             };
         }
 
+        //public methods
+
         List<Bus> IBL.getAllBusses()
         {
             List<Bus> result = new List<Bus>();
@@ -49,6 +56,7 @@ namespace BL
             return result;
         }
 
+        //implementation of DummyBL
         string DummyBL.ImriShalom()
         {
             //      return dal.SayHello();
@@ -65,14 +73,92 @@ namespace BL
             return res;
         }
 
-        string IBL.TomarShalom()
+        public string TomarShalom()
         {
-             return dal.SayHello();
+            return dal.SayHello();
         }
 
         bool IBL.updateBus(Bus bus)
         {
-            return dal.update(convertDAO(bus));
+            throw new NotImplementedException();
+        }
+
+        void IBL.refuel(Bus bus)
+        {
+            List<BusDAO> buses = dal.getBusses();
+            BusDAO busDAO = convertDAO(bus);
+            if (!buses.Any(item => item.License == busDAO.License))
+            {
+                throw new ArgumentNullException("bus");
+            }
+            if (busDAO.Status != Status.READY)
+            {
+                throw new InvalidOperationException("bus not ready");
+            }
+
+            metadlek = new BackgroundWorker();
+            metadlek.DoWork += BackgroundWorker_DoWork;
+            metadlek.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            metadlek.ProgressChanged += BackgroundWorker_ProgressChanged;
+
+            metadlek.WorkerReportsProgress = true;
+
+            metadlek.RunWorkerAsync(busDAO);
+
+            //Thread gamad = new Thread(refuelling);
+            //gamad.Start(busDAO);
+
+            // send Thread to refuel the bus
+        }
+
+        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            int percentage = e.ProgressPercentage;
+// UPDATE UI
+         }
+
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            BusDAO busDAO = e.Result as BusDAO;
+
+            busDAO.Status = Status.READY;
+            dal.update(busDAO);
+        }
+
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BusDAO bus = e.Argument as BusDAO;
+      
+            bus.Status = Status.REFUELLING;
+            dal.update(bus);
+
+            Thread.Sleep(4000);
+            metadlek.ReportProgress(30);
+            Thread.Sleep(4000);
+            metadlek.ReportProgress(60);
+            Thread.Sleep(4000);
+            metadlek.ReportProgress(100);
+
+            e.Result = bus;
+        }
+
+        private void refuelling(object obj)
+        {
+            BusDAO busDAO = obj as BusDAO;
+
+            busDAO.Status = Status.REFUELLING;
+            dal.update(busDAO);
+
+            Thread.Sleep(4000);
+            //update progess in main thread how ?
+            Thread.Sleep(4000);
+            //update progess in main thread how ?
+            Thread.Sleep(4000);
+            //update progess in main thread how ?
+
+            busDAO.Fuel = 1200;
+            busDAO.Status = Status.READY;
+            dal.update(busDAO);
         }
     }
 }

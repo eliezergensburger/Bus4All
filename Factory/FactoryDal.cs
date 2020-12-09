@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Factory
+namespace DALAPI
 {
     public static class FactoryDal
     {
@@ -14,13 +14,14 @@ namespace Factory
         {
             switch (modelname)
             {
-                case "simple":
-                    return DalLists.Instance;
+                case "nosingleton":
+                    //no singleton
+                    return  new DalLists();
                 case "persist":
                     return  DalXML.Instance;
-                case "pashut":
+                case "simple":
                     return  DalObject.Instance;
-                default:
+                 default:
                     return null;
             }
         }

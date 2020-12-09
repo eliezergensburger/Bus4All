@@ -44,6 +44,7 @@
     <Compile Include="DalObject.cs" />
     <Compile Include="DalXML.cs" />
     <Compile Include="DalLists.cs" />
+    <Compile Include="ExtensionsDO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

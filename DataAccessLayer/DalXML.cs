@@ -47,5 +47,20 @@ namespace DAL
         {
             throw new NotImplementedException();
         }
+
+        public BusDAO read(int license)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool addBusInTravel(BusInTravelDAO bus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<BusInTravelDAO> getBusesTravel()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

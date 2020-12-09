@@ -9,15 +9,9 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public sealed class DalLists : IDal
+    public  class DalLists : IDal
     {
-        private static IDal mydal = new DalLists();
-
-        private DalLists() { }
-        static DalLists() { }
-
-        public static IDal Instance { get => mydal; }
-
+ 
         public string SayHello()
         {
             return DataSource.Hello;
@@ -86,5 +80,30 @@ namespace DAL
             return result;
         }
 
+        public BusDAO read(int license)
+        {
+            BusDAO result = default(BusDAO);
+            result = DS.DataSource.Buses.FirstOrDefault(item => item.License == license);
+            if (result != null)
+            {
+                return new BusDAO     //clone (!) clown
+                {
+                    License = result.License,
+                    StartOfWork = result.StartOfWork,
+                    TotalKms = result.TotalKms
+                };
+            }
+            return null;
+        }
+
+        public bool addBusInTravel(BusInTravelDAO bus)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<BusInTravelDAO> getBusesTravel()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
