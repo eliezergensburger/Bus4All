@@ -29,7 +29,7 @@ namespace DAL
 
         public static IDal Instance { get => mydal; }
 
-        #endregion
+        #endregion singleton
 
         #region IDal implementation
         public string SayHello()

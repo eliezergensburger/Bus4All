@@ -29,13 +29,14 @@ namespace PL_WPF
 
         ObservableCollection<Bus> buses = new ObservableCollection<Bus>();
 
-        Button currentButton = null;
-        ProgressBar progressBar = null;
+        //Button currentButton = null;
+        //ProgressBar progressBar = null;
 
         public MainWindow()
         {
             InitializeComponent();
-            foreach (var item in bL.getAllBusses())
+            List<Bus> busList = bL.getAllBusses();
+            foreach (var item in busList)
             {
                 buses.Add(item);
             }
@@ -43,75 +44,92 @@ namespace PL_WPF
 
         }
 
-        public static T FindAncestorOrSelf<T>(DependencyObject obj)
-          where T : DependencyObject
-        {
-            while (obj != null)
-            {
-                T objTest = obj as T;
-
-                if (objTest != null)
-                    return objTest;
-
-                obj = VisualTreeHelper.GetParent(obj);
-            }
-            return null;
-        }
-
         private void btnRefuel_Click(object sender, RoutedEventArgs e)
         {
-            currentButton = sender as Button;
+            Button currentButton = sender as Button;
             Bus bus = currentButton.DataContext as Bus;
 
-            if (bL.canRefuel(bus))
+            try
             {
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += Worker_DoWork;
-                worker.ProgressChanged += Worker_ProgressChanged;
-                worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+                if (bL.canRefuel(bus))
+                {
+                    BackgroundWorker worker = new BackgroundWorker();
+                    worker.DoWork += Worker_DoWork;
+                    worker.ProgressChanged += Worker_ProgressChanged;
+                    worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
 
-                worker.WorkerReportsProgress = true;
+                    worker.WorkerReportsProgress = true;
 
-                currentButton.IsEnabled = false;
-                progressBar = (currentButton.Parent as Grid).Children[4] as ProgressBar;
-  
-                worker.RunWorkerAsync(bus);
+                    currentButton.IsEnabled = false;
+                    //ProgressBar progressBar = (currentButton.Parent as Grid).Children[4] as ProgressBar;
+
+                    List<object> args = new List<object> { bus, currentButton };
+                    worker.RunWorkerAsync(args);
+                }
+
+            }
+            catch (BusNotReadyException ex)
+            {
+                MessageBox.Show("can not refuel because " + ex.Message);
             }
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bgw = sender as BackgroundWorker;
-   
-            Bus bus = e.Argument as Bus;
-           int zman = bL.refuel(bus);
+            int zman = 0;
+
+            List<object> args = e.Argument as List<Object>;
+
+            Bus bus = args[0] as Bus;
+            Button btn = args[1] as Button;
+
+            try
+            {
+                zman = bL.refuel(bus);
+            }
+            catch (BO.BlBusException busex)
+            {
+                e.Result = busex.Message;
+                e.Cancel = true;
+                return;
+            }
+
             for (int i = 1; i <= zman; i++)
             {
                 Thread.Sleep(1000);
-                bgw.ReportProgress(i*100/zman, bus);
+                bgw.ReportProgress(i * 100 / zman, bus);
             }
 
-            e.Result =bus;
+            e.Result = args;
         }
 
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            int percentage = e.ProgressPercentage;
             Bus bus = e.UserState as Bus;
-            progressBar.Value = percentage;
+            bus.Trip = e.ProgressPercentage;
+            //  progressBar.Value = pere.ProgressPercentagecentage;
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Bus bus = e.Result as Bus;
-            bus.Status = BO.Status.READY;
-            bL.updateBus(bus);
+            List<Object> args = e.Result as List<Object>;
 
-            currentButton.IsEnabled = true;
-            progressBar.Value = 0;
+            Bus bus = args[0] as Bus;
 
-            progressBar = null;
-            currentButton = null;
-         }
+            if (e.Cancelled == true)
+            {
+                MessageBox.Show("operation cancelled " + e.Result as String);
+            }
+            else
+            {
+                bus.Status = BO.Status.READY;
+                bL.updateBus(bus);
+            }
+            Button btn = args[1] as Button;
+            btn.IsEnabled = true;
+            bus.Trip = 0;
+        }
+
     }
 }

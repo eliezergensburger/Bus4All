@@ -14,6 +14,7 @@ namespace BL
     internal sealed class MyBL : IBL, IDummyBL
     {
         const  int REFUELLINGTIME = 12;
+        const int FULLTANK = 1200;
 
 
         IDal dal = FactoryDal.getDal("simple");
@@ -21,6 +22,7 @@ namespace BL
 
         #region singleton parts
         private static IBL instance = new MyBL();
+  
         public static IBL getInstance()
         {
             return instance;
@@ -80,6 +82,13 @@ namespace BL
 
         bool IBL.insertBus(Bus bus)
         {
+            List<BusDAO> dalbuses = dal.getBusses();
+            BusDAO busDAO = convertDAO(bus);
+
+            if(dalbuses.Exists(mandehu => mandehu.License== busDAO.License))
+            {
+                throw new BO.BlBusException("kayam bamaarechet");
+            }
             bool res = dal.addBus(convertDAO(bus));
             return res;
         }
@@ -98,9 +107,7 @@ namespace BL
         {
             List<BusDAO> buses = dal.getBusses();
              BusDAO busDAO = convertDAO(bus);
-            //********
-            //for debugging purpose
-            //*******
+  
             if (!buses.Any(item => item.License == busDAO.License))
             {
                 throw new ArgumentNullException("bus");
@@ -118,6 +125,10 @@ namespace BL
             //metadlek.WorkerReportsProgress = true;
 
             //metadlek.RunWorkerAsync(busDAO);
+            if(busDAO.Fuel == FULLTANK)
+            {
+                throw new BO.BlBusException("tank full allready");
+            }
             busDAO.Status = DO.Status.REFUELLING;
             dal.update(busDAO);
 
@@ -166,11 +177,11 @@ namespace BL
         {
             if(bus.Status == BO.Status.DRIVING)
             {
-                throw new BusException("driving");
+                throw new BO.BusNotReadyException("driving");
             }
             if (bus.Status == BO.Status.REFUELLING)
             {
-                throw new BusException("refuelling already");
+                throw new BO.BusNotReadyException("refuelling already");
             }
             return true;
         }
