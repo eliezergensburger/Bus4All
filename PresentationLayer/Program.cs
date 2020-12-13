@@ -15,39 +15,6 @@ namespace PresentationLayer
  
         static void Main(string[] args)
         {
-            Bus bus = new Bus
-            {
-                License = "1234567",
-                StartOfWork = DateTime.Today.AddYears(-2),
-                TotalKms = 5000,
-            };
-
-            bl.insertBus(bus);
-
-            bl.refuel(bus);
- 
-            bl.insertBus(new Bus
-            {
-                License = "33333",
-                StartOfWork = DateTime.Today.AddYears(-20),
-                TotalKms = 999989
-            });
-
-            bl.insertBus(new Bus
-            {
-                License = "55555",
-                StartOfWork = DateTime.Today.AddMonths(-2),
-                TotalKms = 50
-            });
-
-
-            bl.insertBus(new Bus
-            {
-                License = "1234567",
-                StartOfWork = DateTime.Today,
-                TotalKms = 100
-            });
-
             printAllbusses();
 
             Console.WriteLine("Press any key to return.. (wait to backround thread).");
@@ -60,6 +27,7 @@ namespace PresentationLayer
             Console.ReadKey();
         }
 
+ 
         private static void printAllbusses()
         {
             foreach (var item in bl.getAllBusses())

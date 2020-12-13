@@ -13,6 +13,11 @@ namespace DO
         public int TotalKms { get; set; }
         public int Fuel { get; set; }
         public Status Status { get; set; }
+
+        public override string ToString()
+        {
+            return this.ToStringProperty();
+        }
         //....
     }
 }

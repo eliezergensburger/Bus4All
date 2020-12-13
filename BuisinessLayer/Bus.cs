@@ -11,7 +11,7 @@ namespace BO
         public String License { get; set; }
         public DateTime StartOfWork { get; set; }
         public int TotalKms { get; set; }
-        public bool Status { get; set; }
+        public Status Status { get; set; }
         public override string ToString()
         {
             return

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusDAO.cs" />
+    <Compile Include="BusException.cs" />
     <Compile Include="BusInTravelDAO.cs" />
     <Compile Include="IDal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

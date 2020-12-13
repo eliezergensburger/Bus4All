@@ -42,11 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bus.cs" />
-    <Compile Include="DummyBL.cs" />
+    <Compile Include="IDummyBL.cs" />
     <Compile Include="FactoryBL.cs" />
     <Compile Include="IBL.cs" />
     <Compile Include="MyBL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Status.cs" />
     <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,19 @@ namespace DAL
         // singleton implementaion
         private readonly static IDal mydal = new DalObject();
 
-        private DalObject() { }
+        private DalObject()
+        {
+            try
+            {
+                DS.DataSource.initBuses();
+
+            }
+            catch (BusException be)
+            {
+                //TODO
+            }
+        }
+
         static DalObject() { }
 
         public static IDal Instance { get => mydal; }
@@ -32,8 +44,8 @@ namespace DAL
         {
             if (DataSource.Buses.Exists(mishehu => mishehu.License == bus.License))
             {
-                //                throw new InvalidOperationException("license exists allready")
-                return false;
+                throw new BusException("license exists allready");
+                //return false;
             }
 
             //BusDAO realBus = new BusDAO //clone

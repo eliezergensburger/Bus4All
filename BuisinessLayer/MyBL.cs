@@ -11,11 +11,15 @@ using System.ComponentModel;
 
 namespace BL
 {
-    internal sealed class MyBL : IBL, DummyBL
+    internal sealed class MyBL : IBL, IDummyBL
     {
-        IDal dal = FactoryDal.getDal("simple");
-        private BackgroundWorker metadlek;
+        const  int REFUELLINGTIME = 12;
 
+
+        IDal dal = FactoryDal.getDal("simple");
+      //  private BackgroundWorker metadlek;
+
+        #region singleton parts
         private static IBL instance = new MyBL();
         public static IBL getInstance()
         {
@@ -24,16 +28,20 @@ namespace BL
         static MyBL() { }
         private MyBL() { }
 
+        #endregion end of singleton parts
+
         private BusDAO convertDAO(Bus bus)
         {
-            return new BusDAO
+            BusDAO busDAO= new BusDAO
             {
                 License = Int32.Parse(bus.License),
                 StartOfWork = bus.StartOfWork,
                 TotalKms = bus.TotalKms,
                 Fuel = 0,
-                Status = (bus.Status == true) ? Status.READY : Status.REFUELLING
+                //Status = (bus.Status == true) ? Status.READY : Status.REFUELLING
+                Status = (DO.Status)bus.Status
             };
+            return busDAO;
         }
 
         private Bus convertoBO(BusDAO bus)
@@ -43,7 +51,7 @@ namespace BL
                 License = bus.License.ToString(),
                 StartOfWork = bus.StartOfWork,
                 TotalKms = bus.TotalKms,
-                Status = bus.Status == Status.READY
+                Status = (BO.Status)bus.Status
             };
         }
 
@@ -60,7 +68,7 @@ namespace BL
         }
 
         //implementation of DummyBL
-        string DummyBL.ImriShalom()
+        string IDummyBL.ImriShalom()
         {
             //      return dal.SayHello();
             //     dal.SayHello().Replace('l', 'L');
@@ -83,34 +91,37 @@ namespace BL
 
         bool IBL.updateBus(Bus bus)
         {
-            throw new NotImplementedException();
+            return dal.update(convertDAO(bus));
         }
 
-        void IBL.refuel(Bus bus)
+        int IBL.refuel(Bus bus)
         {
             List<BusDAO> buses = dal.getBusses();
-            BusDAO busDAO = convertDAO(bus);
+             BusDAO busDAO = convertDAO(bus);
             //********
             //for debugging purpose
-            busDAO.Status = Status.READY;
             //*******
             if (!buses.Any(item => item.License == busDAO.License))
             {
                 throw new ArgumentNullException("bus");
             }
-            if (busDAO.Status != Status.READY)
+            if (busDAO.Status != DO.Status.READY)
             {
                 throw new InvalidOperationException("bus not ready");
             }
 
-            metadlek = new BackgroundWorker();
-            metadlek.DoWork += BackgroundWorker_DoWork;
-            metadlek.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
-            metadlek.ProgressChanged += BackgroundWorker_ProgressChanged;
+            //metadlek = new BackgroundWorker();
+            //metadlek.DoWork += BackgroundWorker_DoWork;
+            //metadlek.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            //metadlek.ProgressChanged += BackgroundWorker_ProgressChanged;
 
-            metadlek.WorkerReportsProgress = true;
+            //metadlek.WorkerReportsProgress = true;
 
-            metadlek.RunWorkerAsync(busDAO);
+            //metadlek.RunWorkerAsync(busDAO);
+            busDAO.Status = DO.Status.REFUELLING;
+            dal.update(busDAO);
+
+            return REFUELLINGTIME;
 
             //Thread gamad = new Thread(refuelling);
             //gamad.Start(busDAO);
@@ -118,57 +129,71 @@ namespace BL
             // send Thread to refuel the bus
         }
 
-        private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            int percentage = e.ProgressPercentage;
-            Bus bus = e.UserState as Bus;
+        //private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        //{
+        //    BusDAO bus = e.Argument as BusDAO;
 
-            // UPDATE UI
+        //    bus.Status = DO.Status.REFUELLING;
+        //    dal.update(bus);
+
+        //    Thread.Sleep(4000);
+        //    metadlek.ReportProgress(30, bus);
+        //    Thread.Sleep(4000);
+        //    metadlek.ReportProgress(60, bus);
+        //    Thread.Sleep(4000);
+        //    metadlek.ReportProgress(100, bus);
+
+        //    e.Result = bus;
+        //}
+
+        //private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        //{
+        //    int percentage = e.ProgressPercentage;
+        //    Bus bus = e.UserState as Bus;
+
+        //    // UPDATE UI
+        //}
+
+        //private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        //{
+        //    BusDAO busDAO = e.Result as BusDAO;
+
+        //    busDAO.Status = DO.Status.READY;
+        //    dal.update(busDAO);
+        //}
+
+        bool IBL.canRefuel(Bus bus)
+        {
+            if(bus.Status == BO.Status.DRIVING)
+            {
+                throw new BusException("driving");
+            }
+            if (bus.Status == BO.Status.REFUELLING)
+            {
+                throw new BusException("refuelling already");
+            }
+            return true;
         }
 
-        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            BusDAO busDAO = e.Result as BusDAO;
 
-            busDAO.Status = Status.READY;
-            dal.update(busDAO);
-        }
+        //private void refuelling(object obj)
+        //{
+        //    BusDAO busDAO = obj as BusDAO;
 
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BusDAO bus = e.Argument as BusDAO;
+        //    busDAO.Status = Status.REFUELLING;
+        //    dal.update(busDAO);
 
-            bus.Status = Status.REFUELLING;
-            dal.update(bus);
+        //    Thread.Sleep(4000);
+        //    //update progess in main thread how ?
+        //    Thread.Sleep(4000);
+        //    //update progess in main thread how ?
+        //    Thread.Sleep(4000);
+        //    //update progess in main thread how ?
 
-            Thread.Sleep(4000);
-            metadlek.ReportProgress(30,bus);
-            Thread.Sleep(4000);
-            metadlek.ReportProgress(60,bus);
-            Thread.Sleep(4000);
-            metadlek.ReportProgress(100,bus);
+        //    busDAO.Fuel = 1200;
 
-            e.Result = bus;
-        }
-
-        private void refuelling(object obj)
-        {
-            BusDAO busDAO = obj as BusDAO;
-
-            busDAO.Status = Status.REFUELLING;
-            dal.update(busDAO);
-
-            Thread.Sleep(4000);
-            //update progess in main thread how ?
-            Thread.Sleep(4000);
-            //update progess in main thread how ?
-            Thread.Sleep(4000);
-            //update progess in main thread how ?
-
-            busDAO.Fuel = 1200;
-
-            busDAO.Status = Status.READY;
-            dal.update(busDAO);
-        }
+        //    busDAO.Status = Status.READY;
+        //    dal.update(busDAO);
+        //}
     }
 }

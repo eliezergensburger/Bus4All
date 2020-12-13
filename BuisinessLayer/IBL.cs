@@ -8,6 +8,7 @@ namespace BL
         bool insertBus(Bus bus);
         bool updateBus(Bus bus);
         List<Bus> getAllBusses();
-        void refuel(Bus bus);
+        int refuel(Bus bus);
+        bool canRefuel(Bus bus);
     }
 }

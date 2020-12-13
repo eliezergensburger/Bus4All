@@ -7,6 +7,40 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="tittleGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition  Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="License" HorizontalAlignment="Center"/>
+            <TextBlock  Grid.Column="1" Text="Start of Service" HorizontalAlignment="Center"/>
+            <TextBlock  Grid.Column="2" Text="TotalKms" HorizontalAlignment="Center"/>
+        </Grid>
+        <ListBox x:Name="lbBuses" Grid.Row="1" HorizontalContentAlignment="Stretch" >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Width="100" Text="{Binding License}" Margin="10" />
+                        <TextBlock  Grid.Column="1" Width="100" Text= "{Binding StartOfWork, StringFormat ={}{0:dd/MM/yyyy}}"  />
+                        <TextBlock  Grid.Column="2" Width="100" Text="{Binding TotalKms}" />
+                        <Button Grid.Column="3" Width="70" x:Name="btnRefuel" Content="DoRefuel" Click="btnRefuel_Click" />
+                        <ProgressBar Grid.Column="4" x:Name="pbFuel" Height="20" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>

@@ -1,6 +1,6 @@
 ﻿namespace BL
 {
-    public interface DummyBL
+    public interface IDummyBL
     {
         string ImriShalom();
     }
