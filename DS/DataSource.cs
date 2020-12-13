@@ -13,6 +13,9 @@ namespace DS
     public static class DataSource
     {
         private static string helloStr = "Hello World";
+        /// <summary>
+        /// Bus repository
+        /// </summary>
         private static List<BusDAO> busses = new List<BusDAO>();
         private static List<BusInTravelDAO> busestravel = new List<BusInTravelDAO>();
 

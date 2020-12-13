@@ -9,7 +9,7 @@ namespace DAL
 {
     public sealed class DalObject : IDal
     {
-        // singleton implementaion
+        #region singleton implementaion
         private readonly static IDal mydal = new DalObject();
 
         private DalObject()
@@ -29,7 +29,9 @@ namespace DAL
 
         public static IDal Instance { get => mydal; }
 
-        // IDal implementation
+        #endregion
+
+        #region IDal implementation
         public string SayHello()
         {
             return DataSource.Hello;
@@ -137,5 +139,30 @@ namespace DAL
             }
             return travels;
         }
+
+        public void delete(BusDAO bus)
+        {
+           if(! DS.DataSource.Buses.Exists(item => item.License== bus.License))
+            {
+                //return false;
+                throw new BusException("lo kayam bammarechet");
+            }
+            //BusDAO todelete = null;
+            //foreach (var item in DS.DataSource.Buses)
+            //{
+            //    if(item.License == bus.License)
+            //    {
+            //        todelete = item;
+            //        break;
+            //    }
+            //}
+            //if(todelete != null)
+            //{
+            //    DS.DataSource.Buses.Remove(todelete);
+            //}
+
+            DS.DataSource.Buses.RemoveAll(item => item.License == bus.License);
+        }
+        #endregion
     }
 }

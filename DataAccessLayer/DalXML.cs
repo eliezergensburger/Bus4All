@@ -62,5 +62,10 @@ namespace DAL
         {
             throw new NotImplementedException();
         }
+
+        public void delete(BusDAO bus)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
