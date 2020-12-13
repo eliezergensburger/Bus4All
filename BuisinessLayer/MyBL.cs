@@ -121,8 +121,10 @@ namespace BL
         private void BackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int percentage = e.ProgressPercentage;
-// UPDATE UI
-         }
+            Bus bus = e.UserState as Bus;
+
+            // UPDATE UI
+        }
 
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -135,16 +137,16 @@ namespace BL
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BusDAO bus = e.Argument as BusDAO;
-      
+
             bus.Status = Status.REFUELLING;
             dal.update(bus);
 
             Thread.Sleep(4000);
-            metadlek.ReportProgress(30);
+            metadlek.ReportProgress(30,bus);
             Thread.Sleep(4000);
-            metadlek.ReportProgress(60);
+            metadlek.ReportProgress(60,bus);
             Thread.Sleep(4000);
-            metadlek.ReportProgress(100);
+            metadlek.ReportProgress(100,bus);
 
             e.Result = bus;
         }
