@@ -173,19 +173,7 @@ namespace BL
         //    dal.update(busDAO);
         //}
 
-        bool IBL.canRefuel(Bus bus)
-        {
-            if(bus.Status == BO.Status.DRIVING)
-            {
-                throw new BO.BusNotReadyException("driving");
-            }
-            if (bus.Status == BO.Status.REFUELLING)
-            {
-                throw new BO.BusNotReadyException("refuelling already");
-            }
-            return true;
-        }
-
+  
 
         //private void refuelling(object obj)
         //{

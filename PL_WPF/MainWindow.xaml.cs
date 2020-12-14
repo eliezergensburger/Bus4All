@@ -29,9 +29,6 @@ namespace PL_WPF
 
         ObservableCollection<Bus> buses = new ObservableCollection<Bus>();
 
-        //Button currentButton = null;
-        //ProgressBar progressBar = null;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -49,29 +46,18 @@ namespace PL_WPF
             Button currentButton = sender as Button;
             Bus bus = currentButton.DataContext as Bus;
 
-            try
-            {
-                if (bL.canRefuel(bus))
-                {
-                    BackgroundWorker worker = new BackgroundWorker();
-                    worker.DoWork += Worker_DoWork;
-                    worker.ProgressChanged += Worker_ProgressChanged;
-                    worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.ProgressChanged += Worker_ProgressChanged;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
 
-                    worker.WorkerReportsProgress = true;
+            worker.WorkerReportsProgress = true;
 
-                    currentButton.IsEnabled = false;
-                    //ProgressBar progressBar = (currentButton.Parent as Grid).Children[4] as ProgressBar;
+            currentButton.IsEnabled = false;
+            //ProgressBar progressBar = (currentButton.Parent as Grid).Children[4] as ProgressBar;
 
-                    List<object> args = new List<object> { bus, currentButton };
-                    worker.RunWorkerAsync(args);
-                }
-
-            }
-            catch (BusNotReadyException ex)
-            {
-                MessageBox.Show("can not refuel because " + ex.Message);
-            }
+            List<object> args = new List<object> { bus, currentButton };
+            worker.RunWorkerAsync(args);
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
