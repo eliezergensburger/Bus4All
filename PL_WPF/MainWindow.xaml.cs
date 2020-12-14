@@ -54,7 +54,9 @@ namespace PL_WPF
             worker.WorkerReportsProgress = true;
 
             currentButton.IsEnabled = false;
+
             //ProgressBar progressBar = (currentButton.Parent as Grid).Children[4] as ProgressBar;
+            //using Binding to Trip property of Bus (INotifyProertyChanged) instead -- see XAML
 
             List<object> args = new List<object> { bus, currentButton };
             worker.RunWorkerAsync(args);
