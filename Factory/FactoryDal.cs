@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/// <notice>
+/// add file reference to DataAccessLayer.dll from DataAccessLayer/bin/debug
+/// </notice>
 namespace DALAPI
 {
     public static class FactoryDal

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DS", "DS\DS.csproj", "{B22C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DALAPI", "DALAPI\DALAPI.csproj", "{49D6752D-875E-4E5E-BE45-7A6F0B829BD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Factory", "Factory\Factory.csproj", "{131ECD21-722C-4BC3-A4BB-F6156BECF885}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{49D6752D-875E-4E5E-BE45-7A6F0B829BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49D6752D-875E-4E5E-BE45-7A6F0B829BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49D6752D-875E-4E5E-BE45-7A6F0B829BD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{131ECD21-722C-4BC3-A4BB-F6156BECF885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{131ECD21-722C-4BC3-A4BB-F6156BECF885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{131ECD21-722C-4BC3-A4BB-F6156BECF885}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{131ECD21-722C-4BC3-A4BB-F6156BECF885}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

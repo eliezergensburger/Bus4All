@@ -57,6 +57,10 @@
       <Project>{49d6752d-875e-4e5e-be45-7a6f0b829bd4}</Project>
       <Name>DALAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Factory\Factory.csproj">
+      <Project>{131ecd21-722c-4bc3-a4bb-f6156becf885}</Project>
+      <Name>Factory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
