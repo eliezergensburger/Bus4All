@@ -70,7 +70,7 @@ namespace PL_WPF
             List<object> args = e.Argument as List<Object>;
 
             Bus bus = args[0] as Bus;
-            Button btn = args[1] as Button;
+            //Button btn = args[1] as Button;
 
             try
             {
